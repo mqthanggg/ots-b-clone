@@ -13,7 +13,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code and files
-COPY main.py ingest_articles.py test_gemini_assistant.py /app/
+COPY main.py ingest_articles.py test_gemini_assistant.py converter.py scraper.py chunker.py /app/
 COPY README.md /app/
 
 # Create folders for scratch/temp space
