@@ -44,6 +44,34 @@ graph TD
     * Exclusions: Automatically filters out non-content tags such as `<nav>`, `<header>`, `<footer>`, `<aside>`, and elements containing ids/classes matching keywords like `sidebar`, `promo-banner`, `advertisement`, or `social-share`.
   * **get_slug:** Slugifies article titles to create consistent local filenames.
 
+#### Visual Demonstration: HTML to Markdown Normalization
+
+````carousel
+```html
+<!-- BEFORE: Raw HTML Body from Zendesk API -->
+<div class="article-body">
+  <h1>Configuring the YouTube App</h1>
+  <p>To use YouTube with OptiSigns, you must first get your playlist link.</p>
+  <ul>
+    <li>Open YouTube</li>
+    <li>Copy the URL from the address bar</li>
+  </ul>
+  <p>For more details, see <a href="/hc/articles/360051014713">this guide</a>.</p>
+</div>
+```
+<!-- slide -->
+```markdown
+# AFTER: Normalized Markdown Output
+
+To use YouTube with OptiSigns, you must first get your playlist link.
+
+* Open YouTube
+* Copy the URL from the address bar
+
+For more details, see [this guide](/hc/articles/360051014713).
+```
+````
+
 ### B. Daily Sync Orchestrator: `main.py` (Default Docker Entrypoint)
 * **Purpose:** Scrapes, chunks, performs stateless delta-syncing, and uploads content to the Gemini API.
 * **Execution Steps:**
@@ -78,6 +106,49 @@ To make support articles searchable and preserve the contextual accuracy of our 
    [Section Text Content]
    ```
 3. **Size limit control:** Chunks are capped at **1,500 characters**. If a section exceeds this limit, it is recursively split on paragraph boundaries (`\n\n`) using a **200-character overlap** between sub-chunks, maintaining the prepended context header and part index (e.g. `[Part 2/3]`).
+
+#### Visual Demonstration: Semantic Chunking & Metadata Injection
+
+````carousel
+```markdown
+<!-- BEFORE: Raw Markdown Document -->
+# How to use YouTube with OptiSigns
+
+[Original Article](https://support.optisigns.com/hc/articles/360051014713)
+
+## Prerequisites
+You will need a Google account and the URL of the public playlist.
+
+## Configuration Steps
+1. Log in to the portal.
+2. Select Files/Assets -> Apps.
+```
+<!-- slide -->
+```markdown
+<!-- AFTER: Generated Semantic Chunks -->
+
+### Chunk 1:
+Document: How to use YouTube with OptiSigns
+Section: Introduction
+---
+# How to use YouTube with OptiSigns
+
+[Original Article](https://support.optisigns.com/hc/articles/360051014713)
+
+### Chunk 2:
+Document: How to use YouTube with OptiSigns
+Section: Prerequisites
+---
+You will need a Google account and the URL of the public playlist.
+
+### Chunk 3:
+Document: How to use YouTube with OptiSigns
+Section: Configuration Steps
+---
+1. Log in to the portal.
+2. Select Files/Assets -> Apps.
+```
+````
 
 ---
 
