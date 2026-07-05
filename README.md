@@ -8,13 +8,13 @@ This project implements a production-ready, containerized pipeline to scrape Zen
 
 ```mermaid
 graph TD
-    subgraph Daily Cron Sync Job
+    subgraph sync ["Daily Cron Sync Job"]
         A[Zendesk Support API] -->|main.py Scraper| B(Local articles/*.md)
         B -->|main.py Chunker| C(Local chunks/*.md)
         C -->|main.py Delta Sync Engine| D[Gemini File API]
     end
     
-    subgraph Stateless Delta Check (In-Memory)
+    subgraph delta ["Stateless Delta Check (In-Memory)"]
         D -->|client.files.list| E[Active Files Mapping]
         E -->|Match display_name optibot_id_timestamp| F{Check Timestamp Changed?}
         F -->|Yes: Deleted/Updated| G[Delete Old & Re-upload]
@@ -22,7 +22,7 @@ graph TD
         F -->|New Article| I[Upload New File]
     end
 
-    subgraph Support CLI Chatbot (Clonebot)
+    subgraph chatbot ["Support CLI Chatbot (Clonebot)"]
         J[test_gemini_assistant.py] -->|1. Reads active list| K(gemini_config.json)
         J -->|2. Fetches active files| D
         L[User Input / CLI prompt] -->|3. Feeds Question & Files| M[gemini-2.5-flash]
