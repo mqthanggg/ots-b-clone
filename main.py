@@ -215,6 +215,25 @@ def main():
     with open(config_path, 'w', encoding='utf-8') as jf:
         json.dump(config_data, jf, indent=2)
         
+    # Write a last run report artifact
+    import time
+    report_data = {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "scraped_articles_count": len(scraped_articles),
+        "new_articles_uploaded": new_uploads,
+        "updated_articles_reuploaded": updated_uploads,
+        "unchanged_articles_skipped": skipped_count,
+        "deleted_articles_removed": deleted_count,
+        "total_active_files": len(active_gemini_file_names)
+    }
+    report_path = os.path.join(os.getcwd(), 'sync_run_report.json')
+    try:
+        with open(report_path, 'w', encoding='utf-8') as rf:
+            json.dump(report_data, rf, indent=2)
+        print(f"  - Last Run Report saved to: {report_path}")
+    except Exception as e:
+        print(f"[WARNING] Failed to save last run report: {e}")
+        
     # Print summary
     print("\n" + "=" * 50)
     print("Daily Scraper-Uploader Sync Job Complete:")
