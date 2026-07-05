@@ -1,0 +1,13 @@
+.git/
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+chunks/
+articles/
+gemini_config.json
+chunks_knowledge_base.md
+vector_store_upload.py
+test_assistant.py
+upload_to_vector_store.py

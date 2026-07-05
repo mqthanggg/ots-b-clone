@@ -1,0 +1,15 @@
+# Environment variables
+.env
+
+# Generated articles and chunks
+articles/
+chunks/
+chunks_knowledge_base.md
+gemini_config.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
